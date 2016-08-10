@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+
+<!--
+`oc-list-selection`
+Element to manage assign a list of global options/extras to a single product on the Ordercloud platform
+
+@demo demo/index.html 
+-->
+
+<dom-module id="oc-list-selection">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'oc-list-selection',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'oc-list-selection',
+        },
+      },
+
+    });
+  </script>
+</dom-module>
