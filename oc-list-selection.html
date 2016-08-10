@@ -1,12 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 <!--
 `oc-list-selection`
 Element to manage assign a list of global options/extras to a single product on the Ordercloud platform
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="oc-list-selection">
@@ -16,7 +17,26 @@ Element to manage assign a list of global options/extras to a single product on 
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+    <paper-listbox id="selectedList">
+      <template is="dom-repeat" items="{{selectedList}}" >
+        <paper-item>
+          {{item.name}}
+        </paper-item>
+      </template>
+    </paper-listbox>
+
+    <paper-button raised on-tap="_addAll"> << </paper-button>
+    <paper-button raised on-tap="_addItem"> < </paper-button>
+    <paper-button raised on-tap="_removeItem"> > </paper-button>
+    <paper-button raised on-tap="_removeAll"> >> </paper-button>
+
+    <paper-listbox id="selectableList">
+      <template is="dom-repeat" items="{{selectableList}}">
+        <paper-item>
+          {{item.name}}
+        </paper-item>
+      </template>
+    </paper-listbox>
   </template>
 
   <script>
@@ -25,11 +45,89 @@ Element to manage assign a list of global options/extras to a single product on 
       is: 'oc-list-selection',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'oc-list-selection',
+        selectedList : {
+          type: Array,
+          value:
+                  [
+                    {"id": 1, "name": "name 1"},
+                    {id: 2, name: "name 2"},
+                    {id: 3, name: "name 3"},
+                    {id: 4, name: "name 4"}
+                  ]
+
         },
+        selectableList : {
+          type: Array,
+          value:
+                  [
+                    {"id": 5, "name": "name 5"},
+                    {id: 6, name: "name 6"},
+                    {id: 7, name: "name 7"},
+                    {id: 8, name: "name 8"}
+                  ]
+
+        }
       },
+
+      listeners : {
+        "iron-select" : "_removeSelection"
+      },
+
+      _removeSelection : function(e){
+        if(Polymer.dom(e.path[0]).node.id === "selectedList"){
+          this.$.selectableList.selected = undefined;
+        } else {
+          this.$.selectedList.selected = undefined;
+        }
+      },
+
+      _updateItems : function(toremove, toAdd, index, howMany){
+
+      },
+
+      _addItem : function(){
+        var selectedItem = this.$.selectableList.selected;
+        if(selectedItem !== undefined) {
+          var item = this.splice('selectableList', selectedItem, 1);
+          for (var i=0; i<item.length; i++){
+            this.push('selectedList',item[i]);
+          }
+
+          this.fire("item-add", item);
+        }
+
+      },
+
+      _addAll : function(){
+        var items = this.splice('selectableList', 0, this.selectedList.length);
+        for (var i=0; i<items.length; i++){
+          this.push('selectedList',items[i]);
+        }
+
+        this.fire("item-add-all", items);
+      },
+
+      _removeItem : function(){
+        var selectedItem = this.$.selectedList.selected;
+        if(selectedItem !== undefined) {
+          var item = this.splice('selectedList', selectedItem, 1);
+          for (var i=0; i<item.length; i++){
+            this.push('selectableList',item[i]);
+          }
+
+          this.fire("item-remove", item);
+        }
+
+      },
+
+      _removeAll : function(){
+        var items = this.splice('selectedList', 0, this.selectedList.length);
+        for (var i=0; i<items.length; i++){
+          this.push('selectableList',items[i]);
+        }
+
+        this.fire("item-remove-all", items);
+      }
 
     });
   </script>
