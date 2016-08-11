@@ -16,27 +16,55 @@ Element to manage assign a list of global options/extras to a single product on 
       :host {
         display: block;
       }
+
+      .container {
+        display: flex;
+        width: calc(100% - 20px);
+      }
+
+      paper-listbox {
+        width: 40%;
+        border: 1px solid #bababa;
+        height: 170px;
+        overflow-y: scroll;
+      }
+
+      .button-container {
+        width: 20%;
+        text-align: center;
+      }
+
+      .button-container paper-button {
+        width: 80%;
+      }
+
     </style>
-    <paper-listbox id="selectedList">
-      <template is="dom-repeat" items="{{selectedList}}" >
-        <paper-item>
-          {{item.name}}
-        </paper-item>
-      </template>
-    </paper-listbox>
+    <div class="container">
+      <paper-listbox id="selectedList">
+        <template is="dom-repeat" items="{{selectedList}}" >
+          <paper-item>
+            {{item.name}}
+          </paper-item>
+        </template>
+      </paper-listbox>
 
-    <paper-button raised on-tap="_addAll"> << </paper-button>
-    <paper-button raised on-tap="_addItem"> < </paper-button>
-    <paper-button raised on-tap="_removeItem"> > </paper-button>
-    <paper-button raised on-tap="_removeAll"> >> </paper-button>
+      <div class="button-container">
+        <paper-button raised on-tap="_addAll"> << </paper-button>
+        <paper-button raised on-tap="_addItem"> < </paper-button>
+        <paper-button raised on-tap="_removeItem"> > </paper-button>
+        <paper-button raised on-tap="_removeAll"> >> </paper-button>
+      </div>
 
-    <paper-listbox id="selectableList">
-      <template is="dom-repeat" items="{{selectableList}}">
-        <paper-item>
-          {{item.name}}
-        </paper-item>
-      </template>
-    </paper-listbox>
+
+      <paper-listbox id="selectableList">
+        <template is="dom-repeat" items="{{selectableList}}">
+          <paper-item>
+            {{item.name}}
+          </paper-item>
+        </template>
+      </paper-listbox>
+    </div>
+
   </template>
 
   <script>
@@ -45,28 +73,8 @@ Element to manage assign a list of global options/extras to a single product on 
       is: 'oc-list-selection',
 
       properties: {
-        selectedList : {
-          type: Array,
-          value:
-                  [
-                    {"id": 1, "name": "name 1"},
-                    {id: 2, name: "name 2"},
-                    {id: 3, name: "name 3"},
-                    {id: 4, name: "name 4"}
-                  ]
-
-        },
-        selectableList : {
-          type: Array,
-          value:
-                  [
-                    {"id": 5, "name": "name 5"},
-                    {id: 6, name: "name 6"},
-                    {id: 7, name: "name 7"},
-                    {id: 8, name: "name 8"}
-                  ]
-
-        }
+        selectedList : Array,
+        selectableList : Array
       },
 
       listeners : {
@@ -93,7 +101,7 @@ Element to manage assign a list of global options/extras to a single product on 
             this.push('selectedList',item[i]);
           }
 
-          this.fire("item-add", item);
+          this.fire("item-add", item[0]);
         }
 
       },
